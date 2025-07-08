@@ -1,0 +1,1823 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>রক্তদাতা ব্যবস্থাপনা - বৃহত্তর রামপুর</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #dc2626;
+            --primary-dark: #b91c1c;
+            --primary-light: #fecaca;
+            --secondary: #f8fafc;
+            --accent: #3b82f6;
+            --text: #1f2937;
+            --text-light: #6b7280;
+            --text-muted: #9ca3af;
+            --bg: #ffffff;
+            --bg-secondary: #f9fafb;
+            --bg-tertiary: #f3f4f6;
+            --border: #e5e7eb;
+            --border-light: #f3f4f6;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --error: #ef4444;
+            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+            --shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+            --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+            --gradient-primary: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+            --gradient-secondary: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            --gradient-hero: linear-gradient(135deg, rgba(220, 38, 38, 0.95) 0%, rgba(185, 28, 28, 0.9) 100%);
+        }
+
+        [data-theme="dark"] {
+            --primary: #ef4444;
+            --primary-dark: #dc2626;
+            --primary-light: #7f1d1d;
+            --secondary: #1f2937;
+            --accent: #60a5fa;
+            --text: #f9fafb;
+            --text-light: #d1d5db;
+            --text-muted: #9ca3af;
+            --bg: #111827;
+            --bg-secondary: #1f2937;
+            --bg-tertiary: #374151;
+            --border: #374151;
+            --border-light: #4b5563;
+            --gradient-secondary: linear-gradient(135deg, #1f2937 0%, #374151 100%);
+            --gradient-hero: linear-gradient(135deg, rgba(239, 68, 68, 0.95) 0%, rgba(220, 38, 38, 0.9) 100%);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', 'Segoe UI', 'Nirmala UI', Arial, sans-serif;
+            background-color: var(--bg-secondary);
+            color: var(--text);
+            line-height: 1.6;
+            transition: all 0.3s ease;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Loading Animation */
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--bg);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 0.5s ease;
+        }
+
+        .loading-spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid var(--border);
+            border-top: 4px solid var(--primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Header Styles */
+        header {
+            background: var(--gradient-primary);
+            color: white;
+            padding: 1rem 0;
+            box-shadow: var(--shadow-lg);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            backdrop-filter: blur(10px);
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 2rem;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            transition: transform 0.3s ease;
+        }
+
+        .logo:hover {
+            transform: scale(1.02);
+        }
+        
+        .logo i {
+            font-size: 2.5rem;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+        
+        .logo-text h1 {
+            font-size: 1.6rem;
+            font-weight: 700;
+            margin-bottom: 2px;
+        }
+        
+        .logo-text span {
+            font-size: 0.9rem;
+            opacity: 0.9;
+            font-weight: 400;
+        }
+
+        .header-controls {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .theme-toggle {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: white;
+            padding: 8px 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1rem;
+        }
+
+        .theme-toggle:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+        
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 8px;
+        }
+        
+        nav a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            padding: 10px 16px;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        nav a::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.1);
+            transition: left 0.3s ease;
+        }
+
+        nav a:hover::before {
+            left: 0;
+        }
+        
+        nav a:hover, nav a.active {
+            background-color: rgba(255,255,255,0.15);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
+
+        nav a.active {
+            background-color: rgba(255,255,255,0.2);
+        }
+
+        /* Mobile Menu */
+        .mobile-menu-toggle {
+            display: none;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 8px;
+        }
+
+        .mobile-nav {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: var(--gradient-primary);
+            box-shadow: var(--shadow-lg);
+            padding: 1rem 0;
+        }
+
+        .mobile-nav ul {
+            flex-direction: column;
+            gap: 0;
+        }
+
+        .mobile-nav a {
+            display: block;
+            padding: 12px 20px;
+            border-radius: 0;
+        }
+        
+        /* Hero Section */
+        .hero {
+            background: var(--gradient-hero), url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><defs><pattern id="grid" width="20" height="20" patternUnits="userSpaceOnUse"><path d="M 20 0 L 0 0 0 20" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="1"/></pattern></defs><rect width="100" height="100" fill="url(%23grid)"/></svg>');
+            background-size: cover, 20px 20px;
+            color: white;
+            padding: 4rem 0;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at 30% 20%, rgba(255,255,255,0.1) 0%, transparent 50%);
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+        }
+        
+        .hero h2 {
+            font-size: 3rem;
+            margin-bottom: 1.5rem;
+            font-weight: 700;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+            animation: fadeInUp 1s ease;
+        }
+        
+        .hero p {
+            font-size: 1.3rem;
+            max-width: 800px;
+            margin: 0 auto 2.5rem;
+            opacity: 0.95;
+            line-height: 1.7;
+            animation: fadeInUp 1s ease 0.2s both;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .cta-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 2rem;
+            animation: fadeInUp 1s ease 0.4s both;
+        }
+        
+        .btn {
+            padding: 14px 28px;
+            border-radius: 12px;
+            text-decoration: none;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .btn:hover::before {
+            left: 100%;
+        }
+        
+        .btn-primary {
+            background: white;
+            color: var(--primary);
+            box-shadow: var(--shadow-lg);
+        }
+        
+        .btn-primary:hover {
+            background: #f8fafc;
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-xl);
+        }
+        
+        .btn-secondary {
+            background: rgba(255,255,255,0.1);
+            color: white;
+            border: 2px solid rgba(255,255,255,0.3);
+            backdrop-filter: blur(10px);
+        }
+        
+        .btn-secondary:hover {
+            background: rgba(255,255,255,0.2);
+            border-color: rgba(255,255,255,0.5);
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-xl);
+        }
+        
+        /* Main Content */
+        .content-section {
+            padding: 4rem 0;
+        }
+        
+        .section-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+        
+        .section-header h2 {
+            font-size: 2.5rem;
+            color: var(--primary);
+            margin-bottom: 1rem;
+            position: relative;
+            display: inline-block;
+            font-weight: 700;
+        }
+        
+        .section-header h2::after {
+            content: '';
+            position: absolute;
+            bottom: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 4px;
+            background: var(--gradient-primary);
+            border-radius: 2px;
+        }
+        
+        .section-header p {
+            color: var(--text-light);
+            max-width: 700px;
+            margin: 1.5rem auto 0;
+            font-size: 1.1rem;
+            line-height: 1.7;
+        }
+        
+        /* Form Styles */
+        .form-container {
+            background: var(--bg);
+            border-radius: 20px;
+            box-shadow: var(--shadow-xl);
+            padding: 3rem;
+            max-width: 900px;
+            margin: 0 auto;
+            border: 1px solid var(--border);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .form-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--gradient-primary);
+        }
+        
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 24px;
+            margin-bottom: 24px;
+        }
+        
+        .form-group {
+            position: relative;
+        }
+        
+        .form-group.full-width {
+            grid-column: 1 / -1;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--text);
+            font-size: 0.95rem;
+        }
+        
+        input, select, textarea {
+            width: 100%;
+            padding: 14px 16px;
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: var(--bg);
+            color: var(--text);
+        }
+        
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(220, 38, 38, 0.1);
+            transform: translateY(-2px);
+        }
+
+        input:valid {
+            border-color: var(--success);
+        }
+
+        input:invalid:not(:placeholder-shown) {
+            border-color: var(--error);
+        }
+        
+        .radio-group {
+            display: flex;
+            gap: 24px;
+            margin-top: 8px;
+        }
+        
+        .radio-option {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            padding: 8px 12px;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .radio-option:hover {
+            background: var(--bg-tertiary);
+        }
+
+        .radio-option input[type="radio"] {
+            width: auto;
+            margin: 0;
+        }
+        
+        .form-actions {
+            display: flex;
+            justify-content: center;
+            margin-top: 32px;
+        }
+
+        /* Notification System */
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 16px 20px;
+            border-radius: 12px;
+            color: white;
+            font-weight: 500;
+            z-index: 10000;
+            transform: translateX(400px);
+            transition: transform 0.3s ease;
+            box-shadow: var(--shadow-lg);
+        }
+
+        .notification.show {
+            transform: translateX(0);
+        }
+
+        .notification.success {
+            background: var(--success);
+        }
+
+        .notification.error {
+            background: var(--error);
+        }
+
+        .notification.warning {
+            background: var(--warning);
+        }
+        
+        /* Search Section */
+        .search-filters {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 32px;
+            background: var(--bg);
+            padding: 24px;
+            border-radius: 16px;
+            box-shadow: var(--shadow-md);
+            border: 1px solid var(--border);
+        }
+        
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .search-button-group {
+            display: flex;
+            align-items: flex-end;
+            gap: 12px;
+        }
+
+        .btn-search {
+            background: var(--gradient-primary);
+            color: white;
+            border: none;
+            padding: 14px 20px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-search:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .btn-clear {
+            background: var(--bg-tertiary);
+            color: var(--text);
+            border: 1px solid var(--border);
+            padding: 14px 20px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .btn-clear:hover {
+            background: var(--border);
+        }
+        
+        /* Results Table */
+        .results-container {
+            background: var(--bg);
+            border-radius: 16px;
+            box-shadow: var(--shadow-lg);
+            overflow: hidden;
+            border: 1px solid var(--border);
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        th, td {
+            padding: 16px 20px;
+            text-align: left;
+            border-bottom: 1px solid var(--border-light);
+        }
+        
+        th {
+            background: var(--gradient-primary);
+            color: white;
+            font-weight: 600;
+            font-size: 0.95rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        tr:nth-child(even) {
+            background: var(--bg-secondary);
+        }
+        
+        tr:hover {
+            background: var(--primary-light);
+            transform: scale(1.01);
+            transition: all 0.2s ease;
+        }
+        
+        .blood-group {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-weight: 700;
+            font-size: 0.9rem;
+            background: var(--primary-light);
+            color: var(--primary-dark);
+            min-width: 50px;
+        }
+
+        .contact-button {
+            background: var(--accent);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .contact-button:hover {
+            background: #2563eb;
+            transform: translateY(-2px);
+        }
+        
+        /* Admin Panel */
+        .admin-actions {
+            display: flex;
+            gap: 8px;
+            justify-content: center;
+        }
+        
+        .btn-icon {
+            padding: 10px 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            border: none;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+        }
+        
+        .btn-edit {
+            background: var(--warning);
+            color: white;
+        }
+        
+        .btn-delete {
+            background: var(--error);
+            color: white;
+        }
+        
+        .btn-icon:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .admin-login {
+            max-width: 400px;
+            margin: 0 auto;
+        }
+        
+        /* Stats Section */
+        .stats-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 24px;
+            margin-top: 3rem;
+        }
+        
+        .stat-card {
+            background: var(--bg);
+            border-radius: 20px;
+            padding: 32px 24px;
+            text-align: center;
+            box-shadow: var(--shadow-lg);
+            border: 1px solid var(--border);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--gradient-primary);
+        }
+
+        .stat-card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-xl);
+        }
+        
+        .stat-card i {
+            font-size: 3rem;
+            color: var(--primary);
+            margin-bottom: 16px;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
+        }
+        
+        .stat-card h3 {
+            font-size: 3rem;
+            color: var(--primary);
+            margin-bottom: 8px;
+            font-weight: 700;
+        }
+
+        .stat-card p {
+            color: var(--text-light);
+            font-weight: 500;
+            font-size: 1.1rem;
+        }
+        
+        /* Footer */
+        footer {
+            background: var(--bg-tertiary);
+            color: var(--text);
+            padding: 4rem 0 2rem;
+            margin-top: 4rem;
+            border-top: 1px solid var(--border);
+        }
+        
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 40px;
+        }
+        
+        .footer-section h3 {
+            font-size: 1.4rem;
+            margin-bottom: 1.5rem;
+            position: relative;
+            padding-bottom: 12px;
+            font-weight: 600;
+            color: var(--text);
+        }
+        
+        .footer-section h3::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 60px;
+            height: 3px;
+            background: var(--gradient-primary);
+            border-radius: 2px;
+        }
+        
+        .footer-links {
+            list-style: none;
+        }
+        
+        .footer-links li {
+            margin-bottom: 12px;
+        }
+        
+        .footer-links a {
+            color: var(--text-light);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            display: inline-block;
+        }
+        
+        .footer-links a:hover {
+            color: var(--primary);
+            padding-left: 8px;
+        }
+        
+        .contact-info {
+            list-style: none;
+        }
+        
+        .contact-info li {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 16px;
+            align-items: flex-start;
+        }
+        
+        .contact-info i {
+            color: var(--primary);
+            margin-top: 4px;
+            font-size: 1.1rem;
+        }
+        
+        .copyright {
+            text-align: center;
+            padding-top: 2rem;
+            margin-top: 2rem;
+            border-top: 1px solid var(--border);
+            color: var(--text-muted);
+            font-size: 0.95rem;
+        }
+
+        /* Scroll to Top Button */
+        .scroll-to-top {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: var(--gradient-primary);
+            color: white;
+            border: none;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.2rem;
+            box-shadow: var(--shadow-lg);
+            transition: all 0.3s ease;
+            opacity: 0;
+            visibility: hidden;
+            z-index: 1000;
+        }
+
+        .scroll-to-top.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .scroll-to-top:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-xl);
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .header-content {
+                flex-wrap: wrap;
+                gap: 1rem;
+            }
+
+            .mobile-menu-toggle {
+                display: block;
+            }
+
+            nav {
+                display: none;
+            }
+
+            .mobile-nav.show {
+                display: block;
+            }
+            
+            .form-container {
+                padding: 2rem;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            
+            .hero h2 {
+                font-size: 2.2rem;
+            }
+
+            .hero p {
+                font-size: 1.1rem;
+            }
+            
+            .cta-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .search-filters {
+                grid-template-columns: 1fr;
+            }
+
+            .search-button-group {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            th, td {
+                padding: 12px 16px;
+                font-size: 0.9rem;
+            }
+
+            .stats-container {
+                grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            }
+
+            .section-header h2 {
+                font-size: 2rem;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .container {
+                padding: 0 16px;
+            }
+
+            .hero {
+                padding: 3rem 0;
+            }
+            
+            .hero h2 {
+                font-size: 1.8rem;
+            }
+            
+            .hero p {
+                font-size: 1rem;
+            }
+
+            .form-container {
+                padding: 1.5rem;
+            }
+
+            .btn {
+                padding: 12px 20px;
+                font-size: 0.9rem;
+            }
+
+            .stats-container {
+                grid-template-columns: 1fr;
+            }
+
+            .stat-card {
+                padding: 24px 20px;
+            }
+
+            .stat-card h3 {
+                font-size: 2.5rem;
+            }
+        }
+        
+        /* Utility Classes */
+        .hidden {
+            display: none !important;
+        }
+        
+        .text-center {
+            text-align: center;
+        }
+        
+        .mt-1 { margin-top: 1rem; }
+        .mt-2 { margin-top: 2rem; }
+        .mb-1 { margin-bottom: 1rem; }
+        .mb-2 { margin-bottom: 2rem; }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg-secondary);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--primary);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--primary-dark);
+        }
+
+        /* Selection */
+        ::selection {
+            background: var(--primary-light);
+            color: var(--primary-dark);
+        }
+    </style>
+</head>
+<body>
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loading-overlay">
+        <div class="loading-spinner"></div>
+    </div>
+
+    <!-- Header -->
+    <header>
+        <div class="container header-content">
+            <div class="logo">
+                <i class="fas fa-tint"></i>
+                <div class="logo-text">
+                    <h1>বৃহত্তর রামপুর রক্তদাতা নেটওয়ার্ক</h1>
+                    <span>জীবন বাঁচাতে রক্ত দিন</span>
+                </div>
+            </div>
+            <div class="header-controls">
+                <button class="theme-toggle" onclick="toggleTheme()">
+                    <i class="fas fa-moon" id="theme-icon"></i>
+                </button>
+                <button class="mobile-menu-toggle" onclick="toggleMobileMenu()">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <nav>
+                    <ul>
+                        <li><a href="#" class="active" onclick="showSection('home')">হোম</a></li>
+                        <li><a href="#" onclick="showSection('register')">রক্তদাতা রেজিস্ট্রেশন</a></li>
+                        <li><a href="#" onclick="showSection('search')">রক্তদাতা খুঁজুন</a></li>
+                        <li><a href="#" onclick="showSection('admin')">এডমিন</a></li>
+                    </ul>
+                </nav>
+            </div>
+            <div class="mobile-nav" id="mobile-nav">
+                <ul>
+                    <li><a href="#" onclick="showSection('home'); toggleMobileMenu()">হোম</a></li>
+                    <li><a href="#" onclick="showSection('register'); toggleMobileMenu()">রক্তদাতা রেজিস্ট্রেশন</a></li>
+                    <li><a href="#" onclick="showSection('search'); toggleMobileMenu()">রক্তদাতা খুঁজুন</a></li>
+                    <li><a href="#" onclick="showSection('admin'); toggleMobileMenu()">এডমিন</a></li>
+                </ul>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero hidden" id="home-section">
+        <div class="container">
+            <div class="hero-content">
+                <h2>রক্তের অভাবে কেউ যেন প্রাণ না হারায়</h2>
+                <p>বৃহত্তর রামপুরের একমাত্র সমন্বিত রক্তদাতা নেটওয়ার্ক। রক্তদাতাদের সাথে রক্তপ্রার্থীদের সংযুক্ত করার জন্য আমাদের আধুনিক প্ল্যাটফর্ম ব্যবহার করুন।</p>
+                <div class="cta-buttons">
+                    <a href="#" class="btn btn-primary" onclick="showSection('register')">
+                        <i class="fas fa-user-plus"></i> রক্তদাতা হিসেবে রেজিস্টার করুন
+                    </a>
+                    <a href="#" class="btn btn-secondary" onclick="showSection('search')">
+                        <i class="fas fa-search"></i> রক্তদাতা খুঁজুন
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Registration Section -->
+    <section class="content-section hidden" id="register-section">
+        <div class="container">
+            <div class="section-header">
+                <h2>রক্তদাতা রেজিস্ট্রেশন</h2>
+                <p>নিচের ফর্মটি পূরণ করে রক্তদাতা হিসেবে নিজেকে রেজিস্টার করুন। আপনার তথ্য আমাদের নিরাপদ ডাটাবেজে সংরক্ষিত হবে এবং প্রয়োজনমত রক্তপ্রার্থীদের দেখানো হবে।</p>
+            </div>
+            
+            <div class="form-container">
+                <form id="donor-registration-form">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="name">পূর্ণ নাম *</label>
+                            <input type="text" id="name" required placeholder="আপনার পূর্ণ নাম লিখুন">
+                        </div>
+                        <div class="form-group">
+                            <label for="mobile">মোবাইল নম্বর *</label>
+                            <input type="tel" id="mobile" required placeholder="01XXXXXXXXX">
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="village">গ্রামের নাম *</label>
+                            <input type="text" id="village" required placeholder="আপনার গ্রামের নাম">
+                        </div>
+                        <div class="form-group">
+                            <label for="area">পাড়া/মহল্লার নাম *</label>
+                            <input type="text" id="area" required placeholder="পাড়া বা মহল্লার নাম">
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="blood-group">রক্তের গ্রুপ *</label>
+                            <select id="blood-group" required>
+                                <option value="">-- রক্তের গ্রুপ নির্বাচন করুন --</option>
+                                <option value="A+">A+</option>
+                                <option value="A-">A-</option>
+                                <option value="B+">B+</option>
+                                <option value="B-">B-</option>
+                                <option value="O+">O+</option>
+                                <option value="O-">O-</option>
+                                <option value="AB+">AB+</option>
+                                <option value="AB-">AB-</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="last-donation">শেষ রক্তদানের তারিখ</label>
+                            <input type="date" id="last-donation">
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group full-width">
+                            <label>রক্ত দিতে ইচ্ছুক? *</label>
+                            <div class="radio-group">
+                                <div class="radio-option">
+                                    <input type="radio" id="willing-yes" name="willing" value="yes" required>
+                                    <label for="willing-yes">হ্যাঁ, আমি রক্ত দিতে ইচ্ছুক</label>
+                                </div>
+                                <div class="radio-option">
+                                    <input type="radio" id="willing-no" name="willing" value="no">
+                                    <label for="willing-no">না, এই মুহূর্তে নয়</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-user-plus"></i> রেজিস্টার করুন
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- Search Section -->
+    <section class="content-section hidden" id="search-section">
+        <div class="container">
+            <div class="section-header">
+                <h2>রক্তদাতা খুঁজুন</h2>
+                <p>প্রয়োজনীয় রক্তের গ্রুপ নির্বাচন করুন এবং আপনার কাছাকাছি রক্তদাতাদের খুঁজে বের করুন। আমাদের উন্নত সার্চ সিস্টেম ব্যবহার করে দ্রুত ফলাফল পান।</p>
+            </div>
+            
+            <div class="search-filters">
+                <div class="filter-group">
+                    <label for="search-blood-group">রক্তের গ্রুপ *</label>
+                    <select id="search-blood-group" required>
+                        <option value="">-- রক্তের গ্রুপ নির্বাচন করুন --</option>
+                        <option value="A+">A+</option>
+                        <option value="A-">A-</option>
+                        <option value="B+">B+</option>
+                        <option value="B-">B-</option>
+                        <option value="O+">O+</option>
+                        <option value="O-">O-</option>
+                        <option value="AB+">AB+</option>
+                        <option value="AB-">AB-</option>
+                    </select>
+                </div>
+                
+                <div class="filter-group">
+                    <label for="search-village">গ্রামের নাম (ঐচ্ছিক)</label>
+                    <input type="text" id="search-village" placeholder="গ্রামের নাম লিখুন">
+                </div>
+                
+                <div class="filter-group">
+                    <label for="search-area">পাড়া/মহল্লা (ঐচ্ছিক)</label>
+                    <input type="text" id="search-area" placeholder="পাড়া/মহল্লার নাম লিখুন">
+                </div>
+                
+                <div class="filter-group search-button-group">
+                    <button class="btn-search" onclick="searchDonors()">
+                        <i class="fas fa-search"></i> খুঁজুন
+                    </button>
+                    <button class="btn-clear" onclick="clearSearch()">
+                        <i class="fas fa-times"></i> ক্লিয়ার
+                    </button>
+                </div>
+            </div>
+            
+            <div class="results-container">
+                <table id="search-results">
+                    <thead>
+                        <tr>
+                            <th>নাম</th>
+                            <th>গ্রাম</th>
+                            <th>পাড়া/মহল্লা</th>
+                            <th>রক্তের গ্রুপ</th>
+                            <th>যোগাযোগ</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td colspan="5" class="text-center" style="padding: 3rem; color: var(--text-muted);">
+                                <i class="fas fa-search" style="font-size: 3rem; margin-bottom: 1rem; display: block;"></i>
+                                রক্তদাতা খুঁজতে উপরের ফিল্টার ব্যবহার করুন
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+
+    <!-- Admin Section -->
+    <section class="content-section hidden" id="admin-section">
+        <div class="container">
+            <div class="section-header">
+                <h2>এডমিন প্যানেল</h2>
+                <p>রক্তদাতাদের তথ্য ব্যবস্থাপনা করুন। নতুন রক্তদাতা যোগ করুন, বিদ্যমান তথ্য আপডেট করুন বা প্রয়োজনে মুছুন।</p>
+            </div>
+            
+            <div class="form-container">
+                <div class="admin-login" id="admin-login">
+                    <div class="form-group full-width">
+                        <label for="admin-password">এডমিন পাসওয়ার্ড</label>
+                        <input type="password" id="admin-password" required placeholder="পাসওয়ার্ড লিখুন">
+                    </div>
+                    <div class="form-actions">
+                        <button class="btn btn-primary" onclick="adminLogin()">
+                            <i class="fas fa-sign-in-alt"></i> লগইন করুন
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="admin-panel hidden" id="admin-panel">
+                    <h3 class="text-center mb-2">সমস্ত রক্তদাতাদের তালিকা</h3>
+                    <div class="results-container">
+                        <table id="admin-results">
+                            <thead>
+                                <tr>
+                                    <th>নাম</th>
+                                    <th>গ্রাম</th>
+                                    <th>পাড়া/মহল্লা</th>
+                                    <th>রক্তের গ্রুপ</th>
+                                    <th>মোবাইল</th>
+                                    <th>একশন</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Admin results will be populated here -->
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <div class="form-actions mt-2">
+                        <button class="btn btn-secondary" onclick="logoutAdmin()">
+                            <i class="fas fa-sign-out-alt"></i> লগ আউট
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Stats Section -->
+    <section class="content-section">
+        <div class="container">
+            <div class="stats-container">
+                <div class="stat-card">
+                    <i class="fas fa-users"></i>
+                    <h3 id="total-donors">127</h3>
+                    <p>নিবন্ধিত রক্তদাতা</p>
+                </div>
+                <div class="stat-card">
+                    <i class="fas fa-tint"></i>
+                    <h3 id="monthly-donations">84</h3>
+                    <p>গত মাসে রক্তদান</p>
+                </div>
+                <div class="stat-card">
+                    <i class="fas fa-heartbeat"></i>
+                    <h3 id="lives-saved">112</h3>
+                    <p>জীবন বাঁচানো হয়েছে</p>
+                </div>
+                <div class="stat-card">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <h3 id="villages-covered">8</h3>
+                    <p>গ্রাম কভার করা হয়েছে</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>বৃহত্তর রামপুর রক্তদাতা নেটওয়ার্ক</h3>
+                    <p>আমাদের লক্ষ্য বৃহত্তর রামপুর এলাকায় রক্তের চাহিদা ও সরবরাহের মধ্যে সমন্বয় সাধন করা এবং সময়মত রক্ত সরবরাহ নিশ্চিত করা। আমরা একটি আধুনিক ও নিরাপদ প্ল্যাটফর্মের মাধ্যমে এই সেবা প্রদান করি।</p>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>গুরুত্বপূর্ণ লিংক</h3>
+                    <ul class="footer-links">
+                        <li><a href="#" onclick="showSection('home')">হোম</a></li>
+                        <li><a href="#" onclick="showSection('register')">রক্তদাতা রেজিস্ট্রেশন</a></li>
+                        <li><a href="#" onclick="showSection('search')">রক্তদাতা খুঁজুন</a></li>
+                        <li><a href="#">রক্তদান সম্পর্কিত তথ্য</a></li>
+                        <li><a href="#">যোগাযোগ</a></li>
+                        <li><a href="#">গোপনীয়তা নীতি</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>যোগাযোগ করুন</h3>
+                    <ul class="contact-info">
+                        <li>
+                            <i class="fas fa-map-marker-alt"></i>
+                            <span>রামপুর বাজার, কালিহাতী, টাংগাইল</span>
+                        </li>
+                        <li>
+                            <i class="fas fa-phone"></i>
+                            <span>+880 0000-000000</span>
+                        </li>
+                        <li>
+                            <i class="fas fa-envelope"></i>
+                            <span>info@rampurbloodbank.org</span>
+                        </li>
+                        <li>
+                            <i class="fas fa-clock"></i>
+                            <span>২৪/৭ জরুরি সেবা</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="copyright">
+                &copy; ২০২৫ বৃহত্তর রামপুর রক্তদাতা নেটওয়ার্ক। সকল অধিকার সংরক্ষিত। | ডিজাইন ও ডেভেলপমেন্ট: Manus AI
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scroll to Top Button -->
+    <button class="scroll-to-top" id="scroll-to-top" onclick="scrollToTop()">
+        <i class="fas fa-arrow-up"></i>
+    </button>
+
+    <!-- Notification Container -->
+    <div id="notification-container"></div>
+
+    <script>
+        // Sample data - in a real application, this would come from a database
+        const donors = [
+            {id: 1, name: "Md. Sazid Al Hasan Talukder", village: "রামপুর", area: "দক্ষিণ পাড়া,শিকদার বাড়ি", bloodGroup: "B+", mobile: "01708896691", lastDonation: "2024-10-15", willing: true},
+            {id: 2, name: "Alamgir Talukder", village: "রামপুর", area: "Hatipara", bloodGroup: "A+", mobile: "01680419693", lastDonation: "2024-09-20", willing: true},
+            {id: 3, name: "রাজ কুমার (সোহেল)", village: "রামপুর", area: "রামপুর মধ্যপাড়া", bloodGroup: "A+", mobile: "01631929696", lastDonation: "2024-11-01", willing: true},
+            {id: 4, name: "JONY AHMED", village: "রামপুর", area: "মধ্য পাড়া", bloodGroup: "A+", mobile: "01642099316", lastDonation: "2024-08-12", willing: true},
+            {id: 5, name: "মোঃ মমিনুল ইসলাম", village: "রামপুর", area: "সিকদারবাড়ি", bloodGroup: "A+", mobile: "01628295870", lastDonation: "2024-10-25", willing: true},
+            {id: 6, name: "সুমাইয়া", village: "রামপুর", area: "রামপুর", bloodGroup: "O+", mobile: "০১৮৯৩৭২৭৯৬৮", lastDonation: "2024-09-15", willing: true},
+            {id: 7, name: "মো: সায়েম রহমান", village: "কুকরাইল", area: "কুকরাইল", bloodGroup: "A+", mobile: "01755-866900", lastDonation: "2024-11-05", willing: true},
+            {id: 8, name: "Arman Talukdar", village: "রামপুর", area: "রামপুর হাটিপাড়া", bloodGroup: "O+", mobile: "01710842828", lastDonation: "2024-10-18", willing: true},
+            {id: 9, name: "মোঃ শরিফুল ইসলাম", village: "রামপুর", area: "মধ্যেপাড়া বা সিকদার বাড়ী", bloodGroup: "AB+", mobile: "০১৭২৯১৪৬৪৮০", lastDonation: "2024-09-30", willing: true},
+            {id: 10, name: "রিপন আহমেদ", village: "রামপুর", area: "রামপুর (জুম্বাবাড়ী)", bloodGroup: "O+", mobile: "01749337233", lastDonation: "2024-11-22", willing: true}
+        ];
+
+        // Initialize the application
+        document.addEventListener('DOMContentLoaded', function() {
+            // Hide loading overlay
+            setTimeout(() => {
+                document.getElementById('loading-overlay').style.opacity = '0';
+                setTimeout(() => {
+                    document.getElementById('loading-overlay').style.display = 'none';
+                }, 500);
+            }, 1000);
+
+            // Show home section by default
+            showSection('home');
+            
+            // Setup form submission
+            document.getElementById('donor-registration-form').addEventListener('submit', function(e) {
+                e.preventDefault();
+                registerDonor();
+            });
+
+            // Setup scroll to top button
+            window.addEventListener('scroll', function() {
+                const scrollButton = document.getElementById('scroll-to-top');
+                if (window.pageYOffset > 300) {
+                    scrollButton.classList.add('show');
+                } else {
+                    scrollButton.classList.remove('show');
+                }
+            });
+
+            // Load theme preference
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme) {
+                document.documentElement.setAttribute('data-theme', savedTheme);
+                updateThemeIcon(savedTheme);
+            }
+
+            // Animate stats on scroll
+            animateStatsOnScroll();
+        });
+
+        // Theme toggle functionality
+        function toggleTheme() {
+            const currentTheme = document.documentElement.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            
+            document.documentElement.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+            updateThemeIcon(newTheme);
+            
+            showNotification('থিম পরিবর্তন করা হয়েছে', 'success');
+        }
+
+        function updateThemeIcon(theme) {
+            const icon = document.getElementById('theme-icon');
+            icon.className = theme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
+        }
+
+        // Mobile menu toggle
+        function toggleMobileMenu() {
+            const mobileNav = document.getElementById('mobile-nav');
+            mobileNav.classList.toggle('show');
+        }
+
+        // Show section function with smooth transitions
+        function showSection(sectionId) {
+            // Hide all sections with fade out
+            document.querySelectorAll('.content-section, .hero').forEach(section => {
+                section.style.opacity = '0';
+                setTimeout(() => {
+                    section.classList.add('hidden');
+                }, 300);
+            });
+            
+            // Show selected section with fade in
+            setTimeout(() => {
+                if(sectionId === 'home') {
+                    document.getElementById('home-section').classList.remove('hidden');
+                    document.getElementById('home-section').style.opacity = '1';
+                } else if(sectionId === 'register') {
+                    document.getElementById('register-section').classList.remove('hidden');
+                    document.getElementById('register-section').style.opacity = '1';
+                } else if(sectionId === 'search') {
+                    document.getElementById('search-section').classList.remove('hidden');
+                    document.getElementById('search-section').style.opacity = '1';
+                } else if(sectionId === 'admin') {
+                    document.getElementById('admin-section').classList.remove('hidden');
+                    document.getElementById('admin-section').style.opacity = '1';
+                }
+            }, 300);
+            
+            // Update navigation active state
+            document.querySelectorAll('nav a').forEach(link => {
+                link.classList.remove('active');
+            });
+            event.target.classList.add('active');
+
+            // Scroll to top
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Enhanced notification system
+        function showNotification(message, type = 'success') {
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            notification.innerHTML = `
+                <i class="fas fa-${type === 'success' ? 'check-circle' : type === 'error' ? 'exclamation-circle' : 'info-circle'}"></i>
+                ${message}
+            `;
+            
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.classList.add('show');
+            }, 100);
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+                setTimeout(() => {
+                    document.body.removeChild(notification);
+                }, 300);
+            }, 3000);
+        }
+
+        // Enhanced register donor function
+        function registerDonor() {
+            const name = document.getElementById('name').value;
+            const mobile = document.getElementById('mobile').value;
+            const village = document.getElementById('village').value;
+            const area = document.getElementById('area').value;
+            const bloodGroup = document.getElementById('blood-group').value;
+            const lastDonation = document.getElementById('last-donation').value;
+            const willing = document.querySelector('input[name="willing"]:checked').value === 'yes';
+            
+            // Validate mobile number
+            if (!/^01[3-9]\d{8}$/.test(mobile)) {
+                showNotification('সঠিক মোবাইল নম্বর দিন (01XXXXXXXXX)', 'error');
+                return;
+            }
+            
+            // Simulate API call
+            const submitButton = document.querySelector('#donor-registration-form button[type="submit"]');
+            submitButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> রেজিস্টার করা হচ্ছে...';
+            submitButton.disabled = true;
+            
+            setTimeout(() => {
+                // Add to donors array (in real app, this would be saved to database)
+                const newDonor = {
+                    id: donors.length + 1,
+                    name,
+                    village,
+                    area,
+                    bloodGroup,
+                    mobile,
+                    lastDonation,
+                    willing
+                };
+                donors.push(newDonor);
+                
+                showNotification(`ধন্যবাদ ${name}! আপনার রেজিস্ট্রেশন সফলভাবে সম্পন্ন হয়েছে।`, 'success');
+                
+                // Reset form
+                document.getElementById('donor-registration-form').reset();
+                
+                // Update stats
+                updateStats();
+                
+                // Reset button
+                submitButton.innerHTML = '<i class="fas fa-user-plus"></i> রেজিস্টার করুন';
+                submitButton.disabled = false;
+            }, 2000);
+        }
+
+        // Enhanced search donors function
+        function searchDonors() {
+            const bloodGroup = document.getElementById('search-blood-group').value;
+            const village = document.getElementById('search-village').value.toLowerCase();
+            const area = document.getElementById('search-area').value.toLowerCase();
+            
+            if (!bloodGroup) {
+                showNotification('অনুগ্রহ করে রক্তের গ্রুপ নির্বাচন করুন', 'warning');
+                return;
+            }
+            
+            // Show loading
+            const resultsBody = document.querySelector('#search-results tbody');
+            resultsBody.innerHTML = `
+                <tr>
+                    <td colspan="5" class="text-center" style="padding: 3rem;">
+                        <div class="loading-spinner" style="margin: 0 auto 1rem;"></div>
+                        খোঁজা হচ্ছে...
+                    </td>
+                </tr>
+            `;
+            
+            setTimeout(() => {
+                // Filter donors
+                const results = donors.filter(donor => 
+                    donor.bloodGroup === bloodGroup && 
+                    donor.willing === true &&
+                    (village ? donor.village.toLowerCase().includes(village) : true) &&
+                    (area ? donor.area.toLowerCase().includes(area) : true)
+                );
+                
+                // Display results
+                resultsBody.innerHTML = '';
+                
+                if (results.length === 0) {
+                    resultsBody.innerHTML = `
+                        <tr>
+                            <td colspan="5" class="text-center" style="padding: 3rem; color: var(--text-muted);">
+                                <i class="fas fa-search-minus" style="font-size: 3rem; margin-bottom: 1rem; display: block;"></i>
+                                দুঃখিত! এই মানদণ্ডে কোন রক্তদাতা পাওয়া যায়নি
+                            </td>
+                        </tr>
+                    `;
+                    showNotification('কোন রক্তদাতা পাওয়া যায়নি', 'warning');
+                    return;
+                }
+                
+                results.forEach(donor => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${donor.name}</td>
+                        <td>${donor.village}</td>
+                        <td>${donor.area}</td>
+                        <td><span class="blood-group">${donor.bloodGroup}</span></td>
+                        <td>
+                            <button class="contact-button" onclick="contactDonor('${donor.mobile}', '${donor.name}')">
+                                <i class="fas fa-phone"></i> ${donor.mobile}
+                            </button>
+                        </td>
+                    `;
+                    resultsBody.appendChild(row);
+                });
+                
+                showNotification(`${results.length}টি রক্তদাতা পাওয়া গেছে`, 'success');
+            }, 1000);
+        }
+
+        // Contact donor function
+        function contactDonor(mobile, name) {
+            if (confirm(`${name} এর সাথে যোগাযোগ করতে চান?\nমোবাইল: ${mobile}`)) {
+                window.open(`tel:${mobile}`);
+            }
+        }
+
+        // Clear search function
+        function clearSearch() {
+            document.getElementById('search-blood-group').value = '';
+            document.getElementById('search-village').value = '';
+            document.getElementById('search-area').value = '';
+            
+            const resultsBody = document.querySelector('#search-results tbody');
+            resultsBody.innerHTML = `
+                <tr>
+                    <td colspan="5" class="text-center" style="padding: 3rem; color: var(--text-muted);">
+                        <i class="fas fa-search" style="font-size: 3rem; margin-bottom: 1rem; display: block;"></i>
+                        রক্তদাতা খুঁজতে উপরের ফিল্টার ব্যবহার করুন
+                    </td>
+                </tr>
+            `;
+        }
+
+        // Admin login function
+        function adminLogin() {
+            const password = document.getElementById('admin-password').value;
+            
+            if (password === "admin123") {
+                document.getElementById('admin-login').classList.add('hidden');
+                document.getElementById('admin-panel').classList.remove('hidden');
+                loadAdminData();
+                showNotification('সফলভাবে লগইন হয়েছে', 'success');
+            } else {
+                showNotification('ভুল পাসওয়ার্ড! আবার চেষ্টা করুন।', 'error');
+                document.getElementById('admin-password').focus();
+            }
+        }
+
+        // Load admin data
+        function loadAdminData() {
+            const adminBody = document.querySelector('#admin-results tbody');
+            adminBody.innerHTML = '';
+            
+            donors.forEach(donor => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${donor.name}</td>
+                    <td>${donor.village}</td>
+                    <td>${donor.area}</td>
+                    <td><span class="blood-group">${donor.bloodGroup}</span></td>
+                    <td>${donor.mobile}</td>
+                    <td class="admin-actions">
+                        <button class="btn-icon btn-edit" onclick="editDonor(${donor.id})" title="সম্পাদনা">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button class="btn-icon btn-delete" onclick="deleteDonor(${donor.id})" title="মুছুন">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </td>
+                `;
+                adminBody.appendChild(row);
+            });
+        }
+
+        // Edit donor function (placeholder)
+        function editDonor(id) {
+            showNotification('সম্পাদনা ফিচার শীঘ্রই আসছে', 'warning');
+        }
+
+        // Delete donor function
+        function deleteDonor(id) {
+            const donor = donors.find(d => d.id === id);
+            if (confirm(`আপনি কি নিশ্চিত যে ${donor.name} এর তথ্য মুছতে চান?`)) {
+                const index = donors.findIndex(d => d.id === id);
+                donors.splice(index, 1);
+                loadAdminData();
+                updateStats();
+                showNotification('রক্তদাতার তথ্য মুছে দেওয়া হয়েছে', 'success');
+            }
+        }
+
+        // Admin logout function
+        function logoutAdmin() {
+            document.getElementById('admin-panel').classList.add('hidden');
+            document.getElementById('admin-login').classList.remove('hidden');
+            document.getElementById('admin-password').value = '';
+            showNotification('লগ আউট হয়েছে', 'success');
+        }
+
+        // Update stats function
+        function updateStats() {
+            document.getElementById('total-donors').textContent = donors.length;
+            
+            // Calculate monthly donations (simulate)
+            const monthlyDonations = donors.filter(donor => {
+                if (!donor.lastDonation) return false;
+                const donationDate = new Date(donor.lastDonation);
+                const now = new Date();
+                const monthAgo = new Date(now.getFullYear(), now.getMonth() - 1, now.getDate());
+                return donationDate >= monthAgo;
+            }).length;
+            
+            document.getElementById('monthly-donations').textContent = monthlyDonations;
+            
+            // Calculate unique villages
+            const uniqueVillages = [...new Set(donors.map(donor => donor.village))].length;
+            document.getElementById('villages-covered').textContent = uniqueVillages;
+        }
+
+        // Animate stats on scroll
+        function animateStatsOnScroll() {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const statCards = entry.target.querySelectorAll('.stat-card');
+                        statCards.forEach((card, index) => {
+                            setTimeout(() => {
+                                card.style.transform = 'translateY(0)';
+                                card.style.opacity = '1';
+                            }, index * 200);
+                        });
+                    }
+                });
+            });
+
+            const statsContainer = document.querySelector('.stats-container');
+            if (statsContainer) {
+                // Initially hide stats
+                statsContainer.querySelectorAll('.stat-card').forEach(card => {
+                    card.style.transform = 'translateY(50px)';
+                    card.style.opacity = '0';
+                    card.style.transition = 'all 0.6s ease';
+                });
+                
+                observer.observe(statsContainer);
+            }
+        }
+
+        // Scroll to top function
+        function scrollToTop() {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        }
+
+        // Enhanced keyboard navigation
+        document.addEventListener('keydown', function(e) {
+            // ESC key to close mobile menu
+            if (e.key === 'Escape') {
+                const mobileNav = document.getElementById('mobile-nav');
+                if (mobileNav.classList.contains('show')) {
+                    toggleMobileMenu();
+                }
+            }
+            
+            // Ctrl+K to focus search
+            if (e.ctrlKey && e.key === 'k') {
+                e.preventDefault();
+                showSection('search');
+                setTimeout(() => {
+                    document.getElementById('search-blood-group').focus();
+                }, 300);
+            }
+        });
+
+        // Auto-save form data to localStorage
+        function autoSaveForm() {
+            const form = document.getElementById('donor-registration-form');
+            const formData = new FormData(form);
+            const data = {};
+            
+            for (let [key, value] of formData.entries()) {
+                data[key] = value;
+            }
+            
+            localStorage.setItem('donor-form-data', JSON.stringify(data));
+        }
+
+        // Load saved form data
+        function loadSavedFormData() {
+            const savedData = localStorage.getItem('donor-form-data');
+            if (savedData) {
+                const data = JSON.parse(savedData);
+                Object.keys(data).forEach(key => {
+                    const element = document.getElementById(key);
+                    if (element) {
+                        element.value = data[key];
+                    }
+                });
+            }
+        }
+
+        // Initialize auto-save
+        document.addEventListener('DOMContentLoaded', function() {
+            loadSavedFormData();
+            
+            // Auto-save on input
+            const formInputs = document.querySelectorAll('#donor-registration-form input, #donor-registration-form select');
+            formInputs.forEach(input => {
+                input.addEventListener('input', autoSaveForm);
+            });
+        });
+    </script>
+</body>
+</html>
+
